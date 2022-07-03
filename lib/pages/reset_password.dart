@@ -8,10 +8,10 @@ class ResetPassword extends StatefulWidget {
   const ResetPassword({Key? key}) : super(key: key);
 
   @override
-  _ResetPasswordState createState() => _ResetPasswordState();
+  ResetPasswordState createState() => ResetPasswordState();
 }
 
-class _ResetPasswordState extends State<ResetPassword> {
+class ResetPasswordState extends State<ResetPassword> {
   late String email;
   final _auth = FirebaseAuth.instance;
   @override
@@ -100,24 +100,24 @@ class _ResetPasswordState extends State<ResetPassword> {
                   ),
                 ),
                 TextButton(
-                  onPressed: () async {
-                    await _auth.sendPasswordResetEmail(email: email);
+                  onPressed: () {
+                    _auth.sendPasswordResetEmail(email: email);
                     Navigator.pop(context);
                   },
                   child: Container(
-                    child: Center(
-                      child: Text(
-                        "Reset password",
-                        style: GoogleFonts.shipporiAntique(
-                            color: Colors.white, fontSize: 20),
-                      ),
-                    ),
                     height: 70,
                     width: 350,
                     decoration: BoxDecoration(
                       color: Colors.yellow[700],
                       borderRadius: const BorderRadius.all(
                         Radius.circular(10),
+                      ),
+                    ),
+                    child: Center(
+                      child: Text(
+                        "Reset password",
+                        style: GoogleFonts.shipporiAntique(
+                            color: Colors.white, fontSize: 20),
                       ),
                     ),
                   ),

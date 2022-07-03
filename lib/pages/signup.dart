@@ -51,6 +51,7 @@ class _SignUpState extends State<SignUp> {
               ),
               const SizedBox(height: 40),
               const Align(
+                alignment: Alignment.centerLeft,
                 child: Padding(
                   padding: EdgeInsets.fromLTRB(32, 60, 0, 0),
                   child: Text(
@@ -62,7 +63,6 @@ class _SignUpState extends State<SignUp> {
                     ),
                   ),
                 ),
-                alignment: Alignment.centerLeft,
               ),
               const BuildTextField(
                 hintText: "Enter your full name",
@@ -111,9 +111,17 @@ class _SignUpState extends State<SignUp> {
                 child: SizedBox(
                   width: MediaQuery.of(context).size.width,
                   child: TextButton(
-                    onPressed: () {
-                      var testing = "testing";
-                    },
+                    onPressed: () {},
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all(
+                        const Color(0xFF26005f),
+                      ),
+                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                        RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(18.0),
+                        ),
+                      ),
+                    ),
                     child: const Text(
                       "Continue",
                       style: TextStyle(
@@ -122,16 +130,6 @@ class _SignUpState extends State<SignUp> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all(
-                          const Color(0xFF26005f),
-                        ),
-                        shape:
-                            MaterialStateProperty.all<RoundedRectangleBorder>(
-                                RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(18.0),
-                                    side:
-                                        const BorderSide(color: Colors.red)))),
                   ),
                 ),
               ),
