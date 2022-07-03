@@ -1,11 +1,11 @@
-import 'package:aquaponics/pages/home.dart';
-import 'package:aquaponics/pages/location.dart';
-import 'package:aquaponics/pages/model.dart';
-import 'package:curved_navigation_bar/curved_navigation_bar.dart';
+import 'package:aquaponics/pages/signup.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:firebase_core/firebase_core.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(const MyApp());
 }
 
@@ -17,25 +17,9 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  int index = 1;
-
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    //List of screens
-    final screens = [
-      const Location(),
-      const Home(),
-      const Model(),
-    ];
-
-    //List of icons in the bottom nav bar.
-    final items = <Widget>[
-      const Icon(Icons.location_on_rounded, size: 30, color: Color(0xFF26005f)),
-      const Icon(Icons.home_rounded, size: 30, color: Color(0xFF26005f)),
-      const Icon(Icons.bar_chart_rounded, size: 30, color: Color(0xFF26005f)),
-    ];
-
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
@@ -43,6 +27,8 @@ class _MyAppState extends State<MyApp> {
         textTheme: GoogleFonts.openSansTextTheme().copyWith(
           headline1: GoogleFonts.candal(),
         ),
+        colorScheme:
+            ThemeData().colorScheme.copyWith(primary: const Color(0xFF26005f)),
       ),
       title: 'Aquaponics',
       home: SafeArea(
@@ -168,15 +154,8 @@ class _MyAppState extends State<MyApp> {
               ],
             ),
           ),
-          bottomNavigationBar: CurvedNavigationBar(
-            items: items,
-            index: index,
-            height: 60,
-            onTap: (index) => setState(() => this.index = index),
-            backgroundColor: const Color(0xFF26005f),
-            animationDuration: const Duration(milliseconds: 300),
-          ),
-          body: screens[index],
+          //body: screens[index],
+          body: const SignUp(),
         ),
       ),
     );
