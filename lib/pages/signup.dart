@@ -1,6 +1,9 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'package:aquaponics/pages/reset_password.dart';
+import 'package:aquaponics/pages/login.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+
+import 'master.dart';
 
 class SignUp extends StatefulWidget {
   const SignUp({Key? key}) : super(key: key);
@@ -10,6 +13,10 @@ class SignUp extends StatefulWidget {
 }
 
 class _SignUpState extends State<SignUp> {
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+  TextEditingController nameController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -64,73 +71,90 @@ class _SignUpState extends State<SignUp> {
                   ),
                 ),
               ),
-              const BuildTextField(
-                hintText: "Enter your full name",
-                labelText: "Name",
-                icon: Icons.person_rounded,
+              BuildTextField(
+                hintText: "Full name",
+                icon: Icons.person_outline,
                 obscureText: false,
+                textEditingController: nameController,
               ),
-              const BuildTextField(
-                hintText: "Enter your email address",
-                labelText: "Email",
-                icon: Icons.email_rounded,
+              BuildTextField(
+                hintText: "Email",
+                icon: Icons.email_outlined,
                 obscureText: false,
+                textEditingController: emailController,
               ),
-              const BuildTextField(
-                hintText: "Create a password",
-                labelText: "Password",
-                icon: Icons.lock_rounded,
+              BuildTextField(
+                hintText: "Password",
+                icon: Icons.lock_outline,
                 obscureText: true,
-              ),
-              TextButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const ResetPassword(),
-                    ),
-                  );
-                },
-                child: const Align(
-                  alignment: Alignment.centerRight,
-                  child: Padding(
-                    padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
-                    child: Text(
-                      "Forgot Password?",
-                      style: TextStyle(
-                        color: Color(0xFF26005f),
-                        fontSize: 18,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ),
-                ),
+                textEditingController: passwordController,
               ),
               Padding(
                 padding: const EdgeInsets.fromLTRB(25, 10, 25, 0),
                 child: SizedBox(
                   width: MediaQuery.of(context).size.width,
                   child: TextButton(
-                    onPressed: () {},
+                    onPressed: () async {
+                      await signup();
+                      // ignore: use_build_context_synchronously
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const Master(),
+                        ),
+                      );
+                    },
                     style: ButtonStyle(
                       backgroundColor: MaterialStateProperty.all(
                         const Color(0xFF26005f),
                       ),
                       shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                         RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(18.0),
+                          borderRadius: BorderRadius.circular(10.0),
                         ),
                       ),
                     ),
                     child: const Text(
                       "Continue",
                       style: TextStyle(
-                        fontSize: 30,
+                        fontSize: 28,
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                   ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(70, 50, 10, 0),
+                child: Row(
+                  children: [
+                    Text(
+                      "Already have an account?",
+                      style: TextStyle(
+                        color: Colors.grey.shade700,
+                        fontSize: 16,
+                      ),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const Login(),
+                          ),
+                        );
+                      },
+                      child: const Text(
+                        "Login",
+                        style: TextStyle(
+                          color: Color(0xFF26005f),
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ],
@@ -139,43 +163,57 @@ class _SignUpState extends State<SignUp> {
       ),
     );
   }
+
+  Future signup() async {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => const Center(
+        child: CircularProgressIndicator(),
+      ),
+    );
+    try {
+      await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: emailController.text.trim(),
+        password: passwordController.text.trim(),
+      );
+    } on FirebaseAuthException catch (e) {
+      print(e);
+    }
+  }
 }
 
+//Input Fields
 class BuildTextField extends StatelessWidget {
   final String hintText;
   final IconData icon;
-  final String labelText;
   final bool obscureText;
+  final TextEditingController textEditingController;
 
   const BuildTextField({
     Key? key,
     required this.hintText,
     required this.icon,
-    required this.labelText,
     required this.obscureText,
+    required this.textEditingController,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.all(15.0),
       child: SizedBox(
         width: MediaQuery.of(context).size.width * 0.8,
         child: TextField(
           autocorrect: false,
           obscureText: obscureText,
+          controller: textEditingController,
           decoration: InputDecoration(
-            labelText: labelText,
-            labelStyle: const TextStyle(
-              fontSize: 20,
-              color: Color(0xFF26005f),
-              fontWeight: FontWeight.w600,
-            ),
             hintText: hintText,
             prefixIcon: Icon(
               icon,
-              color: const Color(0xFF26005f),
-              size: 40,
+              color: Colors.grey.shade800,
+              size: 30,
             ),
           ),
         ),

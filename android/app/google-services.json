@@ -29,6 +29,13 @@
             {
               "client_id": "672596566457-4ea85ik5ggktv2uvspfcc58rtdg8n2kg.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "672596566457-acmbldlo7fcpmm6gai40lmalijbp1umd.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.aquaponics"
+              }
             }
           ]
         }
