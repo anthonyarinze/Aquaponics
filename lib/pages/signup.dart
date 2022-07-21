@@ -2,7 +2,7 @@
 import 'package:aquaponics/pages/login.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'master.dart';
 
 class SignUp extends StatefulWidget {
@@ -95,7 +95,19 @@ class _SignUpState extends State<SignUp> {
                   width: MediaQuery.of(context).size.width,
                   child: TextButton(
                     onPressed: () async {
-                      await signup();
+                      await signup().then((value) async {
+                        User? user = FirebaseAuth.instance.currentUser;
+                        await FirebaseFirestore.instance
+                            .collection("users")
+                            .doc(user?.uid)
+                            .set({
+                          'uid': user?.uid,
+                          'username': nameController.text.trim(),
+                          'email': emailController.text.trim(),
+                          'password': passwordController.text.trim(),
+                        });
+                      });
+
                       // ignore: use_build_context_synchronously
                       Navigator.push(
                         context,
@@ -177,8 +189,11 @@ class _SignUpState extends State<SignUp> {
         email: emailController.text.trim(),
         password: passwordController.text.trim(),
       );
-    } on FirebaseAuthException catch (e) {
-      print(e);
+    } on FirebaseAuthException catch (exception) {
+      AlertDialog(
+        title: const Text("Error"),
+        content: Text(exception.message.toString()),
+      );
     }
   }
 }

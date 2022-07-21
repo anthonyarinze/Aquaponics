@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class Home extends StatefulWidget {
@@ -8,6 +10,9 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  String documentId = FirebaseAuth.instance.currentUser!.uid;
+  CollectionReference student = FirebaseFirestore.instance.collection('users');
+
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
@@ -41,21 +46,13 @@ class _HomeState extends State<Home> {
                   ),
                 ),
               ),
-              const Align(
+              Align(
                 alignment: Alignment.topCenter,
                 child: Padding(
-                  padding: EdgeInsets.all(40.0),
-                  child: Text(
-                    "Anthony,",
-                    style: TextStyle(
-                      fontSize: 28,
-                      color: Color(0xFF26005f),
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
+                  padding: const EdgeInsets.all(40.0),
+                  child: GetUsername(student: student, documentId: documentId),
                 ),
               ),
-              //
 
               //Elevated Container
               Padding(
@@ -84,6 +81,52 @@ class _HomeState extends State<Home> {
           ),
         ),
       ),
+    );
+  }
+}
+
+class GetUsername extends StatelessWidget {
+  const GetUsername({
+    Key? key,
+    required this.student,
+    required this.documentId,
+  }) : super(key: key);
+
+  final CollectionReference<Object?> student;
+  final String documentId;
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<DocumentSnapshot>(
+      //Fetching data from the documentId specified of the student
+      future: student.doc(documentId).get(),
+      builder:
+          (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+        //Error Handling conditions
+        if (snapshot.hasError) {
+          return const Text("Something went wrong");
+        }
+
+        if (snapshot.hasData && !snapshot.data!.exists) {
+          return const Text("Document does not exist");
+        }
+
+        //Data is output to the user
+        if (snapshot.connectionState == ConnectionState.done) {
+          Map<String, dynamic> data =
+              snapshot.data!.data() as Map<String, dynamic>;
+          return Text(
+            data['username'] + ",",
+            style: const TextStyle(
+              color: Color(0xFF26005f),
+              fontSize: 28,
+              fontWeight: FontWeight.bold,
+            ),
+          );
+        }
+
+        return const Text("loading");
+      },
     );
   }
 }

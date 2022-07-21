@@ -1,7 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
-class FIrebaseServices {
+class FirebaseServices {
+  String? username;
   final _auth = FirebaseAuth.instance;
   final _googleSignIn = GoogleSignIn();
 
@@ -17,9 +19,11 @@ class FIrebaseServices {
           idToken: googleSignInAuthentication.idToken,
         );
       }
-    } on FirebaseAuthException catch (e) {
-      print(e.message);
-      rethrow;
+    } on FirebaseAuthException catch (exception) {
+      return AlertDialog(
+        title: const Text("Error"),
+        content: Text(exception.message.toString()),
+      );
     }
   }
 

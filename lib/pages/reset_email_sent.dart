@@ -78,10 +78,11 @@ class _ResetCompleteState extends State<ResetComplete> {
                 ),
               ),
               child: const Center(
-                  child: Text(
-                "Log In",
-                style: TextStyle(color: Colors.white, fontSize: 20),
-              )),
+                child: Text(
+                  "Log In",
+                  style: TextStyle(color: Colors.white, fontSize: 20),
+                ),
+              ),
             ),
           ),
           const Text(

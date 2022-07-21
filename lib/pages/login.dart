@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:aquaponics/pages/master.dart';
 import 'package:aquaponics/pages/reset_password.dart';
 import 'package:aquaponics/pages/signup.dart';
@@ -15,6 +16,14 @@ class Login extends StatefulWidget {
 class _LoginState extends State<Login> {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+
+  @override
+  void dispose() {
+    super.dispose();
+    emailController.dispose();
+    passwordController.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -101,14 +110,7 @@ class _LoginState extends State<Login> {
                   height: 56,
                   child: TextButton(
                     onPressed: () async {
-                      await signin();
-                      // ignore: use_build_context_synchronously
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const Master(),
-                        ),
-                      );
+                      signin();
                     },
                     style: ButtonStyle(
                       backgroundColor: MaterialStateProperty.all(
@@ -142,7 +144,7 @@ class _LoginState extends State<Login> {
                   width: MediaQuery.of(context).size.width,
                   child: TextButton(
                     onPressed: () {
-                      FIrebaseServices().signInWithGoogle();
+                      FirebaseServices().signInWithGoogle();
                     },
                     style: ButtonStyle(
                       backgroundColor: MaterialStateProperty.all(
@@ -227,8 +229,18 @@ class _LoginState extends State<Login> {
         email: emailController.text.trim(),
         password: passwordController.text.trim(),
       );
-    } on FirebaseAuthException catch (e) {
-      print(e);
+      // ignore: use_build_context_synchronously
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const Master(),
+        ),
+      );
+    } on FirebaseAuthException catch (exception) {
+      AlertDialog(
+        title: const Text("Error"),
+        content: Text(exception.message.toString()),
+      );
     }
   }
 }
@@ -255,6 +267,7 @@ class BuildTextField extends StatelessWidget {
       child: SizedBox(
         width: MediaQuery.of(context).size.width * 0.8,
         child: TextField(
+          onChanged: (value) => textEditingController.text = value,
           autocorrect: false,
           obscureText: obscureText,
           decoration: InputDecoration(
