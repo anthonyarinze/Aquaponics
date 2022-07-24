@@ -69,6 +69,10 @@ flutter:
   uses-material-design: true
   assets:
     - assets/google_PNG.png
+    - assets/field1.png
+    - assets/field2.png
+    - assets/field3.png
+    - assets/field4.png
 
   # To add assets to your application, add an assets section, like this:
   # assets:

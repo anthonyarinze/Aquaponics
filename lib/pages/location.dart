@@ -120,7 +120,9 @@ class _LocationState extends State<Location>
                                     },
                                     loadingBuilder:
                                         (context, child, loadingProgress) {
-                                      if (loadingProgress == null) return child;
+                                      if (loadingProgress == null) {
+                                        return child;
+                                      }
                                       return Center(
                                         child: CircularProgressIndicator(
                                           value: loadingProgress

@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:aquaponics/services/weather_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:geolocator/geolocator.dart';
